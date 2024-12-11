@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block title %}Корзина{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Корзина</h2>
+    </div>
+    <div class="card-body">
+        {% if cart.items.all %}
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Товар</th>
+                        <th>Количество</th>
+                        <th>Цена за шт.</th>
+                        <th>Сумма</th>
+                        <th>Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart.items.all %}
+                        <tr>
+                            <td>
+                                <a href="{{ item.product.get_absolute_url }}">
+                                    {{ item.product.name }}
+                                </a>
+                            </td>
+                            <td>{{ item.quantity }}</td>
+                            <td>{{ item.product.price }} ₽</td>
+                            <td>{{ item.get_total_price }} ₽</td>
+                            <td>
+                                <a href="{% url 'orders:cart_remove' item.id %}" 
+                                   class="btn btn-danger btn-sm">
+                                    Удалить
+                                </a>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    <tr class="table-active">
+                        <td colspan="3"><strong>Итого:</strong></td>
+                        <td colspan="2"><strong>{{ cart.get_total_price }} ₽</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="text-end">
+                <a href="{% url 'products:catalog' %}" class="btn btn-secondary">
+                    Продолжить покупки
+                </a>
+                <a href="{% url 'orders:order_create' %}" class="btn btn-primary">
+                    Оформить заказ
+                </a>
+            </div>
+        {% else %}
+            <p class="text-center">Ваша корзина пуста</p>
+            <div class="text-center">
+                <a href="{% url 'products:catalog' %}" class="btn btn-primary">
+                    Перейти в каталог
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

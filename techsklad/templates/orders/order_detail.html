@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Заказ №{{ order.id }}{% endblock %}
+
+{% block content %}
+<div class="card">
+    <div class="card-header">
+        <h2>Заказ №{{ order.id }}</h2>
+        <p class="text-muted">
+            Создан: {{ order.created|date:"d.m.Y H:i" }}
+            <span class="badge bg-{{ order.status }}">{{ order.get_status_display }}</span>
+        </p>
+    </div>
+    <div class="card-body">
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h4>Информация о заказе</h4>
+                <p><strong>Имя:</strong> {{ order.first_name }} {{ order.last_name }}</p>
+                <p><strong>Email:</strong> {{ order.email }}</p>
+                <p><strong>Телефон:</strong> {{ order.phone }}</p>
+                <p><strong>Адрес:</strong> {{ order.address }}</p>
+            </div>
+            <div class="col-md-6">
+                <h4>Статус заказа</h4>
+                <p><strong>Статус:</strong> {{ order.get_status_display }}</p>
+                <p><strong>Дата создания:</strong> {{ order.created|date:"d.m.Y H:i" }}</p>
+                <p><strong>Последнее обновление:</strong> {{ order.updated|date:"d.m.Y H:i" }}</p>
+            </div>
+        </div>
+
+        <h4>Товары</h4>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Товар</th>
+                    <th>Цена</th>
+                    <th>Количество</th>
+                    <th>Сумма</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in order.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.price }} ₽</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>{{ item.get_total_price }} ₽</td>
+                    </tr>
+                {% endfor %}
+                <tr class="table-active">
+                    <td colspan="3"><strong>Итого:</strong></td>
+                    <td><strong>{{ order.total_price }} ₽</strong></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
